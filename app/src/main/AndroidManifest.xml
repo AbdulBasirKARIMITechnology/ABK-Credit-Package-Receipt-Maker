@@ -4,8 +4,7 @@
 
     <application
         android:allowBackup="false"
-        android:label="Atoma Receipt Maker"
-        android:theme="@style/AppTheme">
+        android:label="Atoma Receipt Maker">
 
         <activity
             android:name="com.atoma.receiptmaker.MainActivity"
