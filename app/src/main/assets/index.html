@@ -1,1 +1,295 @@
- 
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atoma Receipt Maker</title>
+
+<style>
+:root {
+  --green:#079447;
+  --bg:#f2f6f3;
+  --card:#ffffff;
+  --text:#17251d;
+  --muted:#6b7b70;
+  --border:#dce7df;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  font-family:Arial,Tahoma,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+body.dark {
+  --bg:#101a14;
+  --card:#1c2a21;
+  --text:#f1f7f2;
+  --muted:#b2c2b7;
+  --border:#35483b;
+}
+header {
+  background:var(--green);
+  color:white;
+  padding:17px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+header h2 {font-size:18px;margin:0}
+header button {
+  background:transparent;color:white;border:0;font-size:25px;
+}
+.container {padding:15px;max-width:650px;margin:auto}
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:15px;
+  margin-bottom:14px;
+}
+h3 {margin:0 0 14px;font-size:17px}
+label {
+  display:block;
+  font-size:13px;
+  margin:12px 0 6px;
+  color:var(--muted);
+}
+input,select,textarea {
+  width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--bg);
+  color:var(--text);
+  font-size:15px;
+}
+input[type=checkbox] {width:auto}
+button {
+  cursor:pointer;
+  border:0;
+  border-radius:9px;
+  padding:12px 15px;
+  font-size:14px;
+}
+.primary {background:var(--green);color:white;width:100%;font-weight:bold}
+.secondary {background:var(--bg);color:var(--text);border:1px solid var(--border)}
+.grid {display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hidden {display:none!important}
+.menu {
+  display:none;
+  background:var(--card);
+  padding:10px;
+  border-bottom:1px solid var(--border);
+}
+.menu button {
+  display:block;width:100%;text-align:start;
+  background:transparent;color:var(--text);
+  padding:13px;
+}
+.menu.open {display:block}
+.nav {
+  position:sticky;bottom:0;background:var(--card);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding:8px 3px;
+}
+.nav button {background:transparent;color:var(--muted);padding:9px 2px}
+.nav button.active {color:var(--green);font-weight:bold}
+.receipt {
+  background:white;color:#17251d;border-radius:12px;
+  padding:20px;margin-top:15px;
+}
+.receipt-head {text-align:center;border-bottom:1px dashed #aaa;padding-bottom:12px}
+.receipt-head h2 {color:#079447;margin:5px}
+.receipt-head p {font-size:12px;color:#555}
+.success {
+  width:48px;height:48px;border-radius:50%;
+  background:#079447;color:white;display:flex;
+  align-items:center;justify-content:center;
+  font-size:28px;margin:auto;
+}
+.receipt-row {
+  display:flex;justify-content:space-between;gap:10px;
+  padding:9px 0;border-bottom:1px solid #eee;
+  font-size:13px;
+}
+.receipt-row span:first-child {color:#666}
+.receipt-row span:last-child {font-weight:bold;text-align:end}
+.history-item {
+  border:1px solid var(--border);padding:12px;
+  border-radius:10px;margin:9px 0;
+}
+.history-item p {margin:5px 0;font-size:13px}
+.small {font-size:12px;color:var(--muted)}
+footer {text-align:center;padding:14px;color:var(--muted);font-size:12px}
+</style>
+</head>
+
+<body>
+<header>
+  <button onclick="toggleMenu()">☰</button>
+  <h2>Atoma Receipt Maker</h2>
+  <span>●</span>
+</header>
+
+<div class="menu" id="menu">
+  <button onclick="showPage('home')" data-t="home">خانه</button>
+  <button onclick="showPage('form')" data-t="newReceipt">ساخت رسید جدید</button>
+  <button onclick="showPage('history')" data-t="history">تاریخچه رسیدها</button>
+  <button onclick="showPage('settings')" data-t="settings">تنظیمات</button>
+  <button onclick="showPage('about')" data-t="about">درباره برنامه</button>
+</div>
+
+<main class="container">
+
+<section id="home" class="page">
+  <div class="card">
+    <h3 data-t="welcome">به برنامه ساخت و مدیریت رسید عبدالبصیر کریمی تکنالوژی خوش آمدید!</h3>
+    <p class="small" data-t="offline">برنامه به‌صورت آفلاین کار می‌کند.</p>
+    <div class="grid">
+      <button class="primary" onclick="showPage('form')" data-t="create">ساخت رسید</button>
+      <button class="secondary" onclick="showPage('history')" data-t="history">تاریخچه</button>
+    </div>
+  </div>
+  <div class="card">
+    <h3 data-t="summary">خلاصه معاملات</h3>
+    <p><span data-t="totalReceipts">تعداد رسیدها:</span> <strong id="totalCount">0</strong></p>
+  </div>
+</section>
+
+<section id="form" class="page hidden">
+  <div class="card">
+    <h3 data-t="newReceipt">ساخت رسید جدید</h3>
+
+    <label data-t="transactionType">نوع معامله</label>
+    <select id="transactionType" onchange="updateForm()">
+      <option value="package" data-t="packagePurchase">خرید بسته</option>
+      <option value="credit" data-t="creditIncrease">ازدیاد کریدت</option>
+    </select>
+
+    <div id="packageFields">
+      <label data-t="packageType">نوعیت بسته</label>
+      <select id="packageType" onchange="updatePackageOptions()">
+        <option value="internet" data-t="internet">انترنت</option>
+        <option value="minutes" data-t="minutes">دقایق</option>
+        <option value="combined" data-t="combined">ترکیبی</option>
+      </select>
+
+      <label data-t="packageAmount">مقدار بسته</label>
+      <select id="packageAmount" onchange="checkCustomAmount()"></select>
+
+      <input id="customAmount" class="hidden" placeholder="مقدار بسته را بنویسید">
+      
+      <label data-t="packageDuration">زمان بسته</label>
+      <select id="duration" onchange="checkCustomDuration()">
+        <option value="1 روز">1 روز</option>
+        <option value="3 روز">3 روز</option>
+        <option value="7 روز">7 روز</option>
+        <option value="15 روز">15 روز</option>
+        <option value="30 روز">30 روز</option>
+        <option value="90 روز">90 روز</option>
+        <option value="دستی" data-t="manual">دستی</option>
+      </select>
+      <input id="customDuration" class="hidden" placeholder="زمان بسته را بنویسید">
+    </div>
+
+    <div id="creditFields" class="hidden">
+      <label data-t="creditAmount">مقدار کریدت</label>
+      <input id="creditAmount" type="number" min="0" oninput="toggleCost()" placeholder="مثلاً 100">
+    </div>
+
+    <label data-t="sender">فرستنده</label>
+    <select id="senderMode" onchange="toggleSender()">
+      <option value="auto" data-t="automatic">خودکار</option>
+      <option value="manual" data-t="manual">دستی</option>
+    </select>
+    <input id="sender" value="93774799365" readonly>
+
+    <label data-t="receiver">گیرنده</label>
+    <div style="display:flex;gap:7px;direction:ltr">
+      <input value="93" style="width:65px" readonly>
+      <input id="receiver" type="tel" maxlength="9" oninput="detectNetwork()" placeholder="XXXXXXXXX">
+    </div>
+
+    <label data-t="network">شرکت مخابراتی دریافت‌کننده</label>
+    <select id="networkMode" onchange="toggleNetwork()">
+      <option value="auto" data-t="automatic">خودکار</option>
+      <option value="manual" data-t="manual">دستی</option>
+    </select>
+    <select id="network" disabled>
+      <option value="Atoma">اتوما</option>
+      <option value="Etisalat">اتصالات</option>
+      <option value="Roshan">روشن</option>
+      <option value="Salaam">سلام</option>
+      <option value="AWCC">افغان بیسیم</option>
+    </select>
+    <p class="small" id="networkMessage"></p>
+
+    <label data-t="transactionTime">زمان معامله</label>
+    <select id="timeMode" onchange="toggleTime()">
+      <option value="auto" data-t="automatic">خودکار</option>
+      <option value="manual" data-t="manual">دستی</option>
+    </select>
+    <input id="transactionTime" type="datetime-local" readonly>
+
+    <label data-t="cost">هزینه</label>
+    <select id="costMode" onchange="toggleCost()">
+      <option value="auto" data-t="automatic">خودکار</option>
+      <option value="manual" data-t="manual">دستی</option>
+    </select>
+    <input id="cost" type="number" min="0" placeholder="مبلغ به افغانی">
+
+    <label data-t="note">یادداشت</label>
+    <textarea id="note" rows="2" placeholder="یادداشت اختیاری"></textarea>
+
+    <button class="primary" style="margin-top:12px" onclick="createReceipt()" data-t="makeReceipt">ساخت رسید</button>
+  </div>
+
+  <div id="receiptArea" class="hidden">
+    <div class="receipt" id="receipt">
+      <div class="receipt-head">
+        <div class="success">✓</div>
+        <h2>Atoma Receipt Maker</h2>
+        <p id="receiptStatus">رسید ثبت شد</p>
+      </div>
+      <div id="receiptRows"></div>
+      <p style="text-align:center;font-size:11px;color:#777;margin-top:15px">Atoma Receipt Maker</p>
+    </div>
+    <button class="primary" style="margin-top:12px" onclick="downloadJPG()" data-t="downloadJpg">ذخیره تصویر JPG</button>
+    <button class="secondary" style="width:100%;margin-top:8px" onclick="newForm()" data-t="newReceipt">رسید جدید</button>
+  </div>
+</section>
+
+<section id="history" class="page hidden">
+  <div class="card">
+    <h3 data-t="history">تاریخچه رسیدها</h3>
+    <div id="historyList"></div>
+    <button class="secondary" onclick="clearHistory()" data-t="clearHistory">پاک کردن تاریخچه</button>
+  </div>
+</section>
+
+<section id="settings" class="page hidden">
+  <div class="card">
+    <h3 data-t="settings">تنظیمات</h3>
+    <label data-t="language">زبان برنامه</label>
+    <select id="language" onchange="changeLanguage()">
+      <option value="fa">دری / فارسی</option>
+      <option value="en">English</option>
+      <option value="ar">العربية</option>
+      <option value="tr">Türkçe</option>
+    </select>
+    <label data-t="appearance">حالت نمایش</label>
+    <select id="theme" onchange="changeTheme()">
+      <option value="auto" data-t="automatic">خودکار</option>
+      <option value="light" data-t="light">روز</option>
+      <option value="dark" data-t="dark">شب</option>
+    </select>
+  </div>
+</section>
+
+<section id="about" class="page hidden">
+  <div class="card">
+    <h3 data-t="about">درباره برنامه</h3>
+    <p><strong>Atoma Receipt Maker</strong></p>
+    <p data-t="developer">طراحی و توسعه‌دهنده: عبدالبصیر کریمی تکنالوژی</p>
