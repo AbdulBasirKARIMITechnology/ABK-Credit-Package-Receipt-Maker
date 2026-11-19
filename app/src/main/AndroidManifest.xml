@@ -5,11 +5,10 @@
     <application
         android:allowBackup="false"
         android:label="Atoma Receipt Maker"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="false">
+        android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.atoma.receiptmaker.MainActivity"
             android:exported="true">
 
             <intent-filter>
