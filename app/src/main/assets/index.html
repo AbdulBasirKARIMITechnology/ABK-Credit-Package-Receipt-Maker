@@ -3,634 +3,1117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#079447">
 <title>Atoma Pay Receipt Maker</title>
 <style>
-:root {
-  --green:#079447;
-  --bg:#f2f6f3;
-  --card:#fff;
-  --text:#17251d;
-  --muted:#6b7b70;
-  --border:#dce7df;
+:root{
+ --green:#079447;--bg:#f2f6f3;--card:#fff;
+ --text:#17251d;--muted:#6b7b70;--border:#dce7df
 }
 *{box-sizing:border-box}
 body{
-  margin:0;font-family:Arial,Tahoma,sans-serif;
-  background:var(--bg);color:var(--text)
+ margin:0;font-family:Arial,Tahoma,sans-serif;
+ background:var(--bg);color:var(--text)
 }
 body.dark{
-  --bg:#101a14;--card:#1c2a21;
-  --text:#f1f7f2;--muted:#b2c2b7;
-  --border:#35483b
+ --bg:#101a14;--card:#1c2a21;
+ --text:#f1f7f2;--muted:#b2c2b7;--border:#35483b
 }
 header{
-  background:var(--green);color:white;padding:16px;
-  display:flex;align-items:center;justify-content:space-between
+ background:var(--green);color:white;padding:16px;
+ display:flex;align-items:center;justify-content:space-between
 }
 header h2{font-size:17px;margin:0}
+button{
+ cursor:pointer;border:0;border-radius:9px;
+ padding:12px 15px;font-size:14px
+}
 header button{background:transparent;color:white;font-size:24px}
 .container{padding:14px;max-width:650px;margin:auto}
 .card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:14px;padding:15px;margin-bottom:14px
+ background:var(--card);border:1px solid var(--border);
+ border-radius:14px;padding:15px;margin-bottom:14px
 }
 h3{margin:0 0 14px;font-size:17px}
 label{
-  display:block;font-size:13px;margin:12px 0 6px;
-  color:var(--muted)
+ display:block;font-size:13px;margin:12px 0 6px;
+ color:var(--muted)
 }
 input,select,textarea{
-  width:100%;padding:12px;border:1px solid var(--border);
-  border-radius:9px;background:var(--bg);
-  color:var(--text);font-size:15px
+ width:100%;padding:12px;border:1px solid var(--border);
+ border-radius:9px;background:var(--bg);
+ color:var(--text);font-size:15px
 }
 input[type=checkbox]{width:auto}
-button{
-  cursor:pointer;border:0;border-radius:9px;
-  padding:12px 15px;font-size:14px
-}
 .primary{background:var(--green);color:white;width:100%;font-weight:bold}
 .secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .hidden{display:none!important}
 .menu{
-  display:none;background:var(--card);padding:10px;
-  border-bottom:1px solid var(--border)
+ display:none;background:var(--card);padding:10px;
+ border-bottom:1px solid var(--border)
 }
 .menu.open{display:block}
 .menu button{
-  display:block;width:100%;text-align:start;
-  background:transparent;color:var(--text);padding:13px
+ display:block;width:100%;text-align:start;
+ background:transparent;color:var(--text);padding:13px
 }
 .nav{
-  position:sticky;bottom:0;background:var(--card);
-  border-top:1px solid var(--border);
-  display:grid;grid-template-columns:repeat(4,1fr);padding:8px 3px
+ position:sticky;bottom:0;background:var(--card);
+ border-top:1px solid var(--border);
+ display:grid;grid-template-columns:repeat(4,1fr);padding:8px 3px
 }
 .nav button{background:transparent;color:var(--muted);padding:9px 2px}
 .nav button.active{color:var(--green);font-weight:bold}
 .receipt{
-  background:white;color:#17251d;border-radius:12px;
-  padding:20px;margin-top:15px
+ background:white;color:#17251d;border-radius:12px;
+ padding:20px;margin-top:15px
 }
 .receipt-head{text-align:center;border-bottom:1px dashed #aaa;padding-bottom:12px}
 .receipt-head h2{color:#079447;margin:8px 0}
 .receipt-head p{font-size:12px;color:#555}
 .success{
-  width:48px;height:48px;border-radius:50%;
-  background:#079447;color:white;display:flex;
-  align-items:center;justify-content:center;
-  font-size:28px;margin:auto
+ width:48px;height:48px;border-radius:50%;
+ background:#079447;color:white;display:flex;
+ align-items:center;justify-content:center;
+ font-size:28px;margin:auto
 }
 .receipt-row{
-  display:flex;justify-content:space-between;gap:10px;
-  padding:10px 0;border-bottom:1px solid #eee;font-size:13px
+ display:flex;justify-content:space-between;gap:10px;
+ padding:10px 0;border-bottom:1px solid #eee;font-size:13px
 }
 .receipt-row span:first-child{color:#666}
 .receipt-row span:last-child{
-  font-weight:bold;text-align:end;overflow-wrap:anywhere
+ font-weight:bold;text-align:end;overflow-wrap:anywhere
 }
 .history-item{
-  border:1px solid var(--border);padding:12px;
-  border-radius:10px;margin:9px 0
+ border:1px solid var(--border);padding:12px;
+ border-radius:10px;margin:9px 0
 }
 .history-item p{margin:5px 0;font-size:13px}
 .small{font-size:12px;color:var(--muted)}
 footer{text-align:center;padding:14px;color:var(--muted);font-size:12px}
+.notice{
+ background:#fff5df;color:#805900;padding:10px;
+ border-radius:8px;text-align:center;font-size:12px;margin-top:10px
+}
+[dir="ltr"] .receipt-row{direction:ltr}
+[dir="rtl"] .receipt-row{direction:rtl}
 </style>
 </head>
 <body>
 
 <header>
-  <button onclick="toggleMenu()">☰</button>
-  <h2>Atoma Pay Receipt Maker</h2>
-  <span>●</span>
+ <button onclick="toggleMenu()">☰</button>
+ <h2>Atoma Pay Receipt Maker</h2>
+ <span>●</span>
 </header>
 
 <div class="menu" id="menu">
-  <button onclick="showPage('home')">خانه</button>
-  <button onclick="showPage('form')">ساخت رسید جدید</button>
-  <button onclick="showPage('history')">تاریخچه رسیدها</button>
-  <button onclick="showPage('settings')">تنظیمات</button>
-  <button onclick="showPage('about')">درباره برنامه</button>
+ <button onclick="showPage('home')" data-i18n="home">خانه</button>
+ <button onclick="showPage('form')" data-i18n="newReceipt">ساخت رسید جدید</button>
+ <button onclick="showPage('history')" data-i18n="history">تاریخچه رسیدها</button>
+ <button onclick="showPage('settings')" data-i18n="settings">تنظیمات</button>
+ <button onclick="showPage('about')" data-i18n="about">درباره برنامه</button>
 </div>
 
 <main class="container">
 
 <section id="home" class="page">
-  <div class="card">
-    <h3>به برنامه ساخت و مدیریت رسید اتوما پی عبدالبصیر کریمی تکنالوژی خوش آمدید!</h3>
-    <p class="small">برنامه به‌صورت آفلاین کار می‌کند.</p>
-    <div class="grid">
-      <button class="primary" onclick="showPage('form')">ساخت رسید</button>
-      <button class="secondary" onclick="showPage('history')">تاریخچه</button>
-    </div>
+ <div class="card">
+  <h3 data-i18n="welcome">به برنامه ساخت و مدیریت رسید اتوما پی عبدالبصیر کریمی تکنالوژی خوش آمدید!</h3>
+  <p class="small" data-i18n="offline">برنامه به‌صورت آفلاین کار می‌کند.</p>
+  <div class="grid">
+   <button class="primary" onclick="showPage('form')" data-i18n="create">ساخت رسید</button>
+   <button class="secondary" onclick="showPage('history')" data-i18n="history">تاریخچه</button>
   </div>
-  <div class="card">
-    <h3>خلاصه معاملات</h3>
-    <p>تعداد رسیدها: <strong id="totalCount">0</strong></p>
-  </div>
+ </div>
+ <div class="card">
+  <h3 data-i18n="summary">خلاصه معاملات</h3>
+  <p><span data-i18n="total">تعداد رسیدها:</span> <strong id="totalCount">0</strong></p>
+ </div>
 </section>
 
 <section id="form" class="page hidden">
-  <div class="card">
-    <h3>ساخت رسید جدید</h3>
+ <div class="card">
+  <h3 data-i18n="newReceipt">ساخت رسید جدید</h3>
 
-    <label>نوع معامله</label>
-    <select id="transactionType" onchange="updateForm()">
-      <option value="package">خرید بسته</option>
-      <option value="credit">ازدیاد کریدت</option>
-    </select>
+  <label data-i18n="transactionType">نوع معامله</label>
+  <select id="transactionType" onchange="updateForm()">
+   <option value="package" data-i18n="packagePurchase">خرید بسته</option>
+   <option value="credit" data-i18n="creditIncrease">ازدیاد کریدت</option>
+  </select>
 
-    <div id="packageFields">
-      <label>نوعیت بسته</label>
-      <select id="packageType" onchange="updatePackageOptions()">
-        <option value="internet">انترنت</option>
-        <option value="minutes">دقایق</option>
-        <option value="combined">ترکیبی</option>
-      </select>
+  <div id="packageFields">
+   <label data-i18n="packageType">نوعیت بسته</label>
+   <select id="packageType" onchange="updatePackageOptions()">
+    <option value="internet" data-i18n="internet">انترنت</option>
+    <option value="minutes" data-i18n="minutes">دقایق</option>
+    <option value="combined" data-i18n="combined">ترکیبی</option>
+   </select>
 
-      <label>مقدار بسته</label>
-      <select id="packageAmount" onchange="checkCustomAmount()"></select>
-      <input id="customAmount" class="hidden" placeholder="مقدار بسته را بنویسید">
+   <label data-i18n="packageAmount">مقدار بسته</label>
+   <select id="packageAmount" onchange="checkCustomAmount()"></select>
+   <input id="customAmount" class="hidden" placeholder="مقدار بسته را بنویسید">
 
-      <label>زمان بسته</label>
-      <select id="duration" onchange="checkCustomDuration()">
-        <option>1 روز</option>
-        <option>3 روز</option>
-        <option>7 روز</option>
-        <option>15 روز</option>
-        <option>30 روز</option>
-        <option>90 روز</option>
-        <option value="manual">دستی</option>
-      </select>
-      <input id="customDuration" class="hidden" placeholder="زمان بسته را بنویسید">
-    </div>
-
-    <div id="creditFields" class="hidden">
-      <label>مقدار کریدت</label>
-      <input id="creditAmount" type="number" min="0" placeholder="مثلاً 100" oninput="toggleCost()">
-    </div>
-
-    <label>نوع ورود شماره فرستنده</label>
-    <select id="senderMode" onchange="toggleSender()">
-      <option value="auto">خودکار</option>
-      <option value="manual">دستی</option>
-    </select>
-    <input id="sender" value="93774799365" readonly>
-
-    <label>شماره گیرنده</label>
-    <div style="display:flex;gap:7px;direction:ltr">
-      <input value="93" style="width:65px" readonly>
-      <input id="receiver" type="tel" maxlength="9" placeholder="7xxxxxxxx" oninput="detectNetwork()">
-    </div>
-
-    <label>نوع ورود شرکت مخابراتی</label>
-    <select id="networkMode" onchange="toggleNetwork()">
-      <option value="auto">خودکار</option>
-      <option value="manual">دستی</option>
-    </select>
-    <select id="network" disabled>
-      <option value="Atoma">اتوما</option>
-      <option value="Etisalat">اتصالات</option>
-      <option value="Roshan">روشن</option>
-      <option value="Salaam">سلام</option>
-      <option value="AWCC">افغان بیسیم</option>
-    </select>
-    <p class="small" id="networkMessage"></p>
-
-    <label>زمان معامله</label>
-    <select id="timeMode" onchange="toggleTime()">
-      <option value="auto">خودکار</option>
-      <option value="manual">دستی</option>
-    </select>
-    <input id="transactionTime" type="datetime-local" step="1">
-
-    <label>نوع ورود هزینه</label>
-    <select id="costMode" onchange="toggleCost()">
-      <option value="auto">خودکار</option>
-      <option value="manual">دستی</option>
-    </select>
-    <input id="cost" type="number" min="0" placeholder="مبلغ به افغانی">
-
-    <label>یادداشت</label>
-    <textarea id="note" rows="2" placeholder="یادداشت اختیاری"></textarea>
-
-    <button class="primary" style="margin-top:12px" onclick="createReceipt()">ساخت رسید</button>
+   <label data-i18n="packageDuration">زمان بسته</label>
+   <select id="duration" onchange="checkCustomDuration()">
+    <option value="1 روز">1 روز</option>
+    <option value="3 روز">3 روز</option>
+    <option value="7 روز">7 روز</option>
+    <option value="15 روز">15 روز</option>
+    <option value="30 روز">30 روز</option>
+    <option value="90 روز">90 روز</option>
+    <option value="manual" data-i18n="manual">دستی</option>
+   </select>
+   <input id="customDuration" class="hidden" placeholder="زمان بسته را بنویسید">
   </div>
 
-  <div id="receiptArea" class="hidden">
-    <div class="receipt" id="receipt">
-      <div class="receipt-head">
-        <div class="success">✓</div>
-        <h2>Atoma Pay Receipt Maker</h2>
-        <p style="color:#079447;font-weight:bold">موفقیت پرداخت شد</p>
-        <p id="receiptStatus">نمونه آزمایشی ـ غیررسمی</p>
-      </div>
-      <div id="receiptRows"></div>
-      <p style="text-align:center;font-size:11px;color:#777;margin-top:15px">
-        نمونه آزمایشی ـ غیررسمی
-      </p>
-      <p style="text-align:center;font-size:10px;color:#777">
-        این رسید تأیید پرداخت واقعی نیست.
-      </p>
-    </div>
-    <button class="primary" style="margin-top:12px" onclick="downloadJPG()">ذخیره تصویر JPG</button>
-    <button class="secondary" style="width:100%;margin-top:8px" onclick="newForm()">رسید جدید</button>
+  <div id="creditFields" class="hidden">
+   <label data-i18n="creditAmount">مقدار کریدت</label>
+   <input id="creditAmount" type="number" min="0" placeholder="مثلاً 100" oninput="toggleCost()">
   </div>
+
+  <label data-i18n="sender">فرستنده</label>
+  <select id="senderMode" onchange="toggleSender()">
+   <option value="auto" data-i18n="automatic">خودکار</option>
+   <option value="manual" data-i18n="manual">دستی</option>
+  </select>
+  <input id="sender" value="93774799365" readonly>
+
+  <label data-i18n="receiver">گیرنده</label>
+  <div style="display:flex;gap:7px;direction:ltr">
+   <input value="93" style="width:65px" readonly>
+   <input id="receiver" type="tel" maxlength="9" placeholder="7xxxxxxxx" oninput="detectNetwork()">
+  </div>
+
+  <label data-i18n="network">شرکت مخابراتی دریافت‌کننده</label>
+  <select id="networkMode" onchange="toggleNetwork()">
+   <option value="auto" data-i18n="automatic">خودکار</option>
+   <option value="manual" data-i18n="manual">دستی</option>
+  </select>
+  <select id="network" disabled>
+   <option value="Atoma">Atoma</option>
+   <option value="Etisalat">Etisalat</option>
+   <option value="Roshan">Roshan</option>
+   <option value="Salaam">Salaam</option>
+   <option value="AWCC">AWCC</option>
+  </select>
+  <p class="small" id="networkMessage"></p>
+
+  <label data-i18n="transactionTime">زمان معامله</label>
+  <select id="timeMode" onchange="toggleTime()">
+   <option value="auto" data-i18n="automatic">خودکار</option>
+   <option value="manual" data-i18n="manual">دستی</option>
+  </select>
+  <input id="transactionTime" type="datetime-local" step="1">
+
+  <label data-i18n="calendar">نوع تقویم</label>
+  <select id="calendarType" onchange="updateCalendarPreview()">
+   <option value="gregory">میلادی / Gregorian</option>
+   <option value="persian">هجری شمسی / Solar Hijri</option>
+   <option value="islamic">هجری قمری / Islamic</option>
+  </select>
+  <p class="small" id="calendarPreview"></p>
+
+  <label data-i18n="cost">هزینه</label>
+  <select id="costMode" onchange="toggleCost()">
+   <option value="auto" data-i18n="automatic">خودکار</option>
+   <option value="manual" data-i18n="manual">دستی</option>
+  </select>
+  <input id="cost" type="number" min="0" placeholder="مبلغ به افغانی">
+
+  <label data-i18n="note">یادداشت</label>
+  <textarea id="note" rows="2" placeholder="یادداشت اختیاری"></textarea>
+
+  <button class="primary" style="margin-top:12px" onclick="createReceipt()" data-i18n="makeReceipt">ساخت رسید</button>
+ </div>
+
+ <div id="receiptArea" class="hidden">
+  <div class="receipt" id="receipt">
+   <div class="receipt-head">
+    <div class="success">✓</div>
+    <h2>Atoma Pay Receipt Maker</h2>
+    <p id="receiptSuccess" style="color:#079447;font-weight:bold">موفقیت پرداخت شد</p>
+    <p id="receiptStatus">نمونه آزمایشی ـ غیررسمی</p>
+   </div>
+   <div id="receiptRows"></div>
+   <div class="notice">نمونه آزمایشی ـ غیررسمی | این رسید تأیید پرداخت واقعی نیست.</div>
+  </div>
+  <button class="primary" style="margin-top:12px" onclick="downloadJPG()" data-i18n="downloadJpg">ذخیره تصویر JPG</button>
+  <button class="secondary" style="width:100%;margin-top:8px" onclick="newForm()" data-i18n="newReceipt">رسید جدید</button>
+ </div>
 </section>
 
 <section id="history" class="page hidden">
-  <div class="card">
-    <h3>تاریخچه رسیدها</h3>
-    <div id="historyList"></div>
-    <button class="secondary" onclick="clearHistory()">پاک کردن تاریخچه</button>
-  </div>
+ <div class="card">
+  <h3 data-i18n="history">تاریخچه رسیدها</h3>
+  <div id="historyList"></div>
+  <button class="secondary" onclick="clearHistory()" data-i18n="clearHistory">پاک کردن تاریخچه</button>
+ </div>
 </section>
 
 <section id="settings" class="page hidden">
-  <div class="card">
-    <h3>تنظیمات</h3>
-    <label>زبان برنامه</label>
-    <select id="language" onchange="changeLanguage()">
-      <option value="fa">دری / فارسی</option>
-      <option value="en">English</option>
-      <option value="ar">العربية</option>
-      <option value="tr">Türkçe</option>
-    </select>
-    <label>حالت نمایش</label>
-    <select id="theme" onchange="changeTheme()">
-      <option value="auto">خودکار</option>
-      <option value="light">روز</option>
-      <option value="dark">شب</option>
-    </select>
-  </div>
+ <div class="card">
+  <h3 data-i18n="settings">تنظیمات</h3>
+  <label data-i18n="language">زبان برنامه</label>
+  <select id="language" onchange="changeLanguage()">
+   <option value="fa">دری / فارسی</option>
+   <option value="en">English</option>
+   <option value="ar">العربية</option>
+   <option value="tr">Türkçe</option>
+  </select>
+  <label data-i18n="appearance">حالت نمایش</label>
+  <select id="theme" onchange="changeTheme()">
+   <option value="auto" data-i18n="automatic">خودکار</option>
+   <option value="light" data-i18n="light">روز</option>
+   <option value="dark" data-i18n="dark">شب</option>
+  </select>
+ </div>
 </section>
 
 <section id="about" class="page hidden">
-  <div class="card">
-    <h3>درباره برنامه</h3>
-    <p><strong>Atoma Pay Receipt Maker</strong></p>
-    <p>طراحی و توسعه‌دهنده: عبدالبصیر کریمی تکنالوژی</p>
-    <p>نسخه برنامه: 1.0.0</p>
-    <p>قابلیت اجرا: آفلاین</p>
-    <p class="small">این برنامه برای نمونه‌سازی و ثبت داخلی است و وابستگی رسمی به شرکت مخابراتی ندارد.</p>
-  </div>
+ <div class="card">
+  <h3 data-i18n="about">درباره برنامه</h3>
+  <p><strong>Atoma Pay Receipt Maker</strong></p>
+  <p>طراحی و توسعه‌دهنده: عبدالبصیر کریمی تکنالوژی</p>
+  <p>Version 1.1.0</p>
+  <p>Offline Application</p>
+  <p class="small">این برنامه ابزار مستقل نمونه‌سازی و ثبت داخلی است و تأیید رسمی شرکت مخابراتی نیست.</p>
+ </div>
 </section>
 
 </main>
 
 <nav class="nav">
-  <button class="active" onclick="showPage('home')">خانه</button>
-  <button onclick="showPage('form')">رسید جدید</button>
-  <button onclick="showPage('history')">تاریخچه</button>
-  <button onclick="showPage('settings')">تنظیمات</button>
+ <button class="active" onclick="showPage('home')" data-i18n="home">خانه</button>
+ <button onclick="showPage('form')" data-i18n="newReceipt">رسید جدید</button>
+ <button onclick="showPage('history')" data-i18n="history">تاریخچه</button>
+ <button onclick="showPage('settings')" data-i18n="settings">تنظیمات</button>
 </nav>
-
-<footer>Atoma Pay Receipt Maker — Version 1.0.0</footer>
+<footer>Atoma Pay Receipt Maker — Version 1.1.0</footer>
 
 <script>
 const $ = id => document.getElementById(id);
 
-let receipts = JSON.parse(localStorage.getItem("atomaReceipts") || "[]");
-let currentReceipt = null;
-
-function toggleMenu(){
-  $("menu").classList.toggle("open");
+const translations = {
+fa:{
+ home:"خانه",newReceipt:"ساخت رسید جدید",history:"تاریخچه رسیدها",
+ settings:"تنظیمات",about:"درباره برنامه",
+ welcome:"به برنامه ساخت و مدیریت رسید اتوما پی عبدالبصیر کریمی تکنالوژی خوش آمدید!",
+ offline:"برنامه به‌صورت آفلاین کار می‌کند.",
+ create:"ساخت رسید",summary:"خلاصه معاملات",total:"تعداد رسیدها:",
+ transactionType:"نوع معامله",packagePurchase:"خرید بسته",
+ creditIncrease:"ازدیاد کریدت",packageType:"نوعیت بسته",
+ internet:"انترنت",minutes:"دقایق",combined:"ترکیبی",
+ packageAmount:"مقدار بسته",packageDuration:"زمان بسته",
+ creditAmount:"مقدار کریدت",sender:"فرستنده",receiver:"گیرنده",
+ network:"شرکت مخابراتی دریافت‌کننده",transactionTime:"زمان معامله",
+ cost:"هزینه",note:"یادداشت",makeReceipt:"ساخت رسید",
+ downloadJpg:"ذخیره تصویر JPG",clearHistory:"پاک کردن تاریخچه",
+ language:"زبان برنامه",appearance:"حالت نمایش",
+ automatic:"خودکار",manual:"دستی",light:"روز",dark:"شب",
+ calendar:"نوع تقویم",success:"موفقیت پرداخت شد",
+ sample:"نمونه آزمایشی ـ غیررسمی",
+ transaction:"نوع معامله",amount:"مقدار بسته / کریدت",
+ duration:"زمان بسته",time:"زمان معامله",number:"شماره معامله",
+ noHistory:"هنوز هیچ رسیدی ثبت نشده است.",
+ invalidReceiver:"شماره گیرنده باید ۹ رقم باشد و با 7 شروع شود.",
+ invalidSender:"شماره فرستنده را وارد کنید.",
+ invalidCredit:"مقدار کریدت را وارد کنید.",
+ invalidPackage:"مقدار و زمان بسته را تکمیل کنید.",
+ confirmClear:"آیا از پاک کردن تمام تاریخچه مطمئن هستید؟"
+},
+en:{
+ home:"Home",newReceipt:"New Receipt",history:"Receipt History",
+ settings:"Settings",about:"About",
+ welcome:"Welcome to Atoma Pay Receipt Maker by Abdul Basir Karimi Technology!",
+ offline:"This application works offline.",
+ create:"Create Receipt",summary:"Transaction Summary",total:"Total receipts:",
+ transactionType:"Transaction Type",packagePurchase:"Package Purchase",
+ creditIncrease:"Credit Increase",packageType:"Package Type",
+ internet:"Internet",minutes:"Minutes",combined:"Combined",
+ packageAmount:"Package Amount",packageDuration:"Package Duration",
+ creditAmount:"Credit Amount",sender:"Sender",receiver:"Receiver",
+ network:"Recipient Mobile Network",transactionTime:"Transaction Time",
+ cost:"Cost",note:"Note",makeReceipt:"Create Receipt",
+ downloadJpg:"Save JPG Image",clearHistory:"Clear History",
+ language:"Application Language",appearance:"Appearance",
+ automatic:"Automatic",manual:"Manual",light:"Light",dark:"Dark",
+ calendar:"Calendar Type",success:"Payment successful",
+ sample:"Unofficial Sample",
+ transaction:"Transaction Type",amount:"Package / Credit Amount",
+ duration:"Package Duration",time:"Transaction Time",number:"Transaction Number",
+ noHistory:"No receipts have been saved yet.",
+ invalidReceiver:"Receiver number must contain 9 digits and start with 7.",
+ invalidSender:"Please enter the sender number.",
+ invalidCredit:"Please enter the credit amount.",
+ invalidPackage:"Please complete package amount and duration.",
+ confirmClear:"Are you sure you want to clear all history?"
+},
+ar:{
+ home:"الرئيسية",newReceipt:"إنشاء إيصال جديد",history:"سجل الإيصالات",
+ settings:"الإعدادات",about:"حول البرنامج",
+ welcome:"مرحباً بكم في برنامج Atoma Pay Receipt Maker!",
+ offline:"يعمل هذا البرنامج دون اتصال بالإنترنت.",
+ create:"إنشاء إيصال",summary:"ملخص المعاملات",total:"عدد الإيصالات:",
+ transactionType:"نوع المعاملة",packagePurchase:"شراء باقة",
+ creditIncrease:"زيادة الرصيد",packageType:"نوع الباقة",
+ internet:"إنترنت",minutes:"دقائق",combined:"مركبة",
+ packageAmount:"مقدار الباقة",packageDuration:"مدة الباقة",
+ creditAmount:"مقدار الرصيد",sender:"المرسل",receiver:"المستلم",
+ network:"شركة الاتصالات المستلمة",transactionTime:"وقت المعاملة",
+ cost:"التكلفة",note:"ملاحظة",makeReceipt:"إنشاء إيصال",
+ downloadJpg:"حفظ صورة JPG",clearHistory:"مسح السجل",
+ language:"لغة البرنامج",appearance:"المظهر",
+ automatic:"تلقائي",manual:"يدوي",light:"نهاري",dark:"ليلي",
+ calendar:"نوع التقويم",success:"تم الدفع بنجاح",
+ sample:"نموذج تجريبي غير رسمي",
+ transaction:"نوع المعاملة",amount:"مقدار الباقة / الرصيد",
+ duration:"مدة الباقة",time:"وقت المعاملة",number:"رقم المعاملة",
+ noHistory:"لا توجد إيصالات محفوظة بعد.",
+ invalidReceiver:"يجب أن يتكون رقم المستلم من 9 أرقام ويبدأ بالرقم 7.",
+ invalidSender:"يرجى إدخال رقم المرسل.",
+ invalidCredit:"يرجى إدخال مقدار الرصيد.",
+ invalidPackage:"يرجى إدخال مقدار الباقة ومدتها.",
+ confirmClear:"هل أنت متأكد من مسح جميع السجلات؟"
+},
+tr:{
+ home:"Ana Sayfa",newReceipt:"Yeni Makbuz",history:"Makbuz Geçmişi",
+ settings:"Ayarlar",about:"Hakkında",
+ welcome:"Atoma Pay Receipt Maker uygulamasına hoş geldiniz!",
+ offline:"Bu uygulama çevrimdışı çalışır.",
+ create:"Makbuz Oluştur",summary:"İşlem Özeti",total:"Toplam makbuz:",
+ transactionType:"İşlem Türü",packagePurchase:"Paket Satın Alma",
+ creditIncrease:"Bakiye Yükleme",packageType:"Paket Türü",
+ internet:"İnternet",minutes:"Dakika",combined:"Karma",
+ packageAmount:"Paket Miktarı",packageDuration:"Paket Süresi",
+ creditAmount:"Bakiye Miktarı",sender:"Gönderen",receiver:"Alıcı",
+ network:"Alıcı Operatör",transactionTime:"İşlem Zamanı",
+ cost:"Ücret",note:"Not",makeReceipt:"Makbuz Oluştur",
+ downloadJpg:"JPG Görselini Kaydet",clearHistory:"Geçmişi Temizle",
+ language:"Uygulama Dili",appearance:"Görünüm",
+ automatic:"Otomatik",manual:"Manuel",light:"Açık",dark:"Koyu",
+ calendar:"Takvim Türü",success:"Ödeme başarılı",
+ sample:"Resmî Olmayan Deneme",
+ transaction:"İşlem Türü",amount:"Paket / Bakiye Miktarı",
+ duration:"Paket Süresi",time:"İşlem Zamanı",number:"İşlem Numarası",
+ noHistory:"Henüz kayıtlı makbuz yok.",
+ invalidReceiver:"Alıcı numarası 9 haneli olmalı ve 7 ile başlamalıdır.",
+ invalidSender:"Lütfen gönderen numarasını girin.",
+ invalidCredit:"Lütfen bakiye miktarını girin.",
+ invalidPackage:"Lütfen paket miktarını ve süresini tamamlayın.",
+ confirmClear:"Tüm geçmişi silmek istediğinizden emin misiniz?"
 }
-
-function showPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
-  $(id).classList.remove("hidden");
-  $("menu").classList.remove("open");
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-  updateSummary();
-  if(id==="history") renderHistory();
-}
-
-function updateSummary(){
-  $("totalCount").textContent=receipts.length;
-}
-
-function updateForm(){
-  const credit=$("transactionType").value==="credit";
-  $("packageFields").classList.toggle("hidden",credit);
-  $("creditFields").classList.toggle("hidden",!credit);
-  toggleCost();
-}
-
-const packageOptions={
-  internet:[
-    "100 MB","500 MB","1 GB","2 GB","3 GB","5 GB","10 GB","انترنت نامحدود","دستی"
-  ],
-  minutes:[
-    "10 دقیقه","50 دقیقه","100 دقیقه","500 دقیقه",
-    "1100 دقیقه","2000 دقیقه","5000 دقیقه",
-    "دقایق نامحدود","پیام نامحدود","دقایق و پیام نامحدود","دستی"
-  ],
-  combined:[
-    "دقایق و پیام نامحدود",
-    "100 MB + 100 دقیقه",
-    "500 MB + 500 دقیقه",
-    "1 GB + 1100 دقیقه",
-    "2 GB + 2000 دقیقه",
-    "3 GB + 3000 دقیقه",
-    "5 GB + 5000 دقیقه",
-    "دستی"
-  ]
 };
 
-function updatePackageOptions(){
-  const type=$("packageType").value;
-  $("packageAmount").innerHTML="";
-  packageOptions[type].forEach(item=>{
-    const op=document.createElement("option");
-    op.value=item;op.textContent=item;
-    $("packageAmount").appendChild(op);
-  });
-  checkCustomAmount();
+let currentLang="fa";
+let receipts=JSON.parse(localStorage.getItem("atomaReceipts")||"[]");
+let currentReceipt=null;
+
+function tr(key){
+ return translations[currentLang]?.[key]||translations.fa[key]||key;
 }
 
-function checkCustomAmount(){
-  const custom=$("packageAmount").value==="دستی";
-  $("customAmount").classList.toggle("hidden",!custom);
-}
-
-function checkCustomDuration(){
-  $("customDuration").classList.toggle("hidden",$("duration").value!=="manual");
-}
-
-function toggleSender(){
-  const manual=$("senderMode").value==="manual";
-  $("sender").readOnly=!manual;
-  if(!manual)$("sender").value="93774799365";
-  else $("sender").value="";
-}
-
-function detectNetwork(){
-  if($("networkMode").value==="manual")return;
-  const number=$("receiver").value;
-  const prefix=number.substring(0,2);
-  const map={
-    "70":"AWCC","71":"AWCC",
-    "72":"Roshan","79":"Roshan",
-    "73":"Etisalat","78":"Etisalat",
-    "74":"Salaam","75":"Salaam",
-    "76":"Atoma","77":"Atoma"
-  };
-  const network=map[prefix];
-  if(network){
-    $("network").value=network;
-    $("networkMessage").textContent="شبکه به‌صورت خودکار تشخیص شد.";
-  }else{
-    $("networkMessage").textContent="پیش‌شماره شناخته نشد؛ شبکه را دستی انتخاب کنید.";
-  }
-}
-
-function toggleNetwork(){
-  const manual=$("networkMode").value==="manual";
-  $("network").disabled=!manual;
-  if(!manual)detectNetwork();
-}
-
-function toggleTime(){
-  const manual=$("timeMode").value==="manual";
-  $("transactionTime").readOnly=!manual;
-  if(!manual)setCurrentTime();
-}
-
-function setCurrentTime(){
-  const d=new Date();
-  const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);
-  $("transactionTime").value=local.toISOString().slice(0,19);
-}
-
-function toggleCost(){
-  const manual=$("costMode").value==="manual";
-  $("cost").readOnly=!manual;
-  if(!manual){
-    const amount=$("transactionType").value==="credit"
-      ?$("creditAmount").value:"";
-    $("cost").value=amount;
-  }
-}
-
-function getValue(id){
-  return $(id).value.trim();
-}
-
-function createReceipt(){
-  const credit=$("transactionType").value==="credit";
-  const receiver=getValue("receiver");
-  const sender=getValue("sender");
-
-  if(receiver.length!==9 || !/^7\d{8}$/.test(receiver)){
-    alert("شماره گیرنده باید ۹ رقم باشد و با 7 شروع شود.");
-    return;
-  }
-  if(!sender){
-    alert("شماره فرستنده را وارد کنید.");
-    return;
-  }
-  if(credit && Number(getValue("creditAmount"))<=0){
-    alert("مقدار کریدت را وارد کنید.");
-    return;
-  }
-
-  let packageAmount="";
-  let duration="";
-  if(!credit){
-    packageAmount=getValue("packageAmount")==="دستی"
-      ?getValue("customAmount"):getValue("packageAmount");
-    duration=getValue("duration")==="manual"
-      ?getValue("customDuration"):getValue("duration");
-    if(!packageAmount || !duration){
-      alert("مقدار و زمان بسته را تکمیل کنید.");
-      return;
-    }
-  }
-
-  const now=getValue("transactionTime");
-  const transactionTime=$("timeMode").value==="manual"
-    ?now.replace("T"," "):new Date().toLocaleString("en-GB");
-
-  const cost=getValue("cost");
-  const network=getValue("network");
-
-  const data={
-    id:Date.now(),
-    type:credit?"ازدیاد کریدت":"خرید بسته",
-    packageType:credit?"کریدت":getValue("packageType"),
-    amount:credit?getValue("creditAmount"):packageAmount,
-    duration:credit?"—":duration,
-    sender:sender,
-    receiver:"93"+receiver,
-    network:network,
-    time:transactionTime,
-    cost:cost,
-    note:getValue("note")
-  };
-
-  currentReceipt=data;
-  renderReceipt(data);
-  receipts.unshift(data);
-  localStorage.setItem("atomaReceipts",JSON.stringify(receipts));
-  $("receiptArea").classList.remove("hidden");
-  updateSummary();
-  $("receiptArea").scrollIntoView({behavior:"smooth"});
-}
-
-function addRow(label,value){
-  const row=document.createElement("div");
-  row.className="receipt-row";
-  const a=document.createElement("span");
-  const b=document.createElement("span");
-  a.textContent=label;
-  b.textContent=value||"—";
-  row.append(a,b);
-  $("receiptRows").appendChild(row);
-}
-
-function renderReceipt(d){
-  $("receiptRows").innerHTML="";
-  addRow("نوع معامله",d.type);
-  addRow("نوعیت بسته",d.packageType);
-  addRow("مقدار بسته / کریدت",d.amount);
-  addRow("زمان بسته",d.duration);
-  addRow("فرستنده",d.sender);
-  addRow("شرکت مخابراتی دریافت‌کننده",d.network);
-  addRow("گیرنده",d.receiver);
-  addRow("زمان معامله",d.time);
-  addRow("هزینه",d.cost?d.cost+" افغانی":"—");
-  addRow("یادداشت",d.note);
-  addRow("شماره معامله",String(d.id));
-}
-
-function newForm(){
-  $("receiptArea").classList.add("hidden");
-  $("receiver").value="";
-  $("note").value="";
-  $("cost").value="";
-  $("creditAmount").value="";
-  $("customAmount").value="";
-  $("customDuration").value="";
-  $("senderMode").value="auto";
-  toggleSender();
-  $("transactionType").value="package";
-  updateForm();
-  updatePackageOptions();
-  setCurrentTime();
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function renderHistory(){
-  $("historyList").innerHTML="";
-  if(!receipts.length){
-    $("historyList").textContent="هنوز هیچ رسیدی ثبت نشده است.";
-    return;
-  }
-  receipts.forEach((r,index)=>{
-    const box=document.createElement("div");
-    box.className="history-item";
-    const title=document.createElement("strong");
-    title.textContent=r.type+" - "+r.receiver;
-    const p=document.createElement("p");
-    p.textContent="مقدار: "+r.amount+" | هزینه: "+(r.cost||"—");
-    const t=document.createElement("p");
-    t.textContent="زمان: "+r.time;
-    const btn=document.createElement("button");
-    btn.className="secondary";
-    btn.textContent="نمایش رسید";
-    btn.onclick=()=>{
-      currentReceipt=r;
-      renderReceipt(r);
-      $("receiptArea").classList.remove("hidden");
-      showPage("form");
-      $("receiptArea").scrollIntoView({behavior:"smooth"});
-    };
-    box.append(title,p,t,btn);
-    $("historyList").appendChild(box);
-  });
-}
-
-function clearHistory(){
-  if(confirm("آیا از پاک کردن تمام تاریخچه مطمئن هستید؟")){
-    receipts=[];
-    localStorage.removeItem("atomaReceipts");
-    renderHistory();
-    updateSummary();
-  }
-}
-
-function downloadJPG(){
-  if(!currentReceipt)return;
-  const d=currentReceipt;
-  const lines=[
-    ["نوع معامله",d.type],
-    ["نوعیت بسته",d.packageType],
-    ["مقدار بسته / کریدت",d.amount],
-    ["زمان بسته",d.duration],
-    ["فرستنده",d.sender],
-    ["شرکت مخابراتی",d.network],
-    ["گیرنده",d.receiver],
-    ["زمان معامله",d.time],
-    ["هزینه",d.cost?d.cost+" افغانی":"—"],
-    ["یادداشت",d.note||"—"],
-    ["شماره معامله",String(d.id)]
-  ];
-  const canvas=document.createElement("canvas");
-  const width=800;
-  const height=330+lines.length*65;
-  canvas.width=width;canvas.height=height;
-  const ctx=canvas.getContext("2d");
-  ctx.fillStyle="#ffffff";ctx.fillRect(0,0,width,height);
-  ctx.direction="rtl";ctx.textAlign="center";
-  ctx.fillStyle="#079447";ctx.font="bold 34px Arial";
-  ctx.fillText("Atoma Pay Receipt Maker",width/2,55);
-  ctx.fillStyle="#079447";ctx.font="bold 27px Arial";
-  ctx.fillText("✓ موفقیت پرداخت شد",width/2,110);
-  ctx.fillStyle="#a33";ctx.font="bold 21px Arial";
-  ctx.fillText("نمونه آزمایشی ـ غیررسمی",width/2,155);
-  let y=220;
-  lines.forEach(([label,value])=>{
-    ctx.strokeStyle="#dddddd";
-    ctx.beginPath();ctx.moveTo(35,y+22);ctx.lineTo(width-35,y+22);ctx.stroke();
-    ctx.textAlign="right";ctx.direction="rtl";
-    ctx.fillStyle="#666";ctx.font="22px Arial";
-    ctx.fillText(label,width-45,y);
-    ctx.textAlign="left";ctx.fillStyle="#17251d";
-    ctx.font="bold 22px Arial";
-    ctx.fillText(String(value||"—"),45,y);
-    y+=65;
-  });
-  ctx.textAlign="center";ctx.fillStyle="#777";ctx.font="18px Arial";
-  ctx.fillText("این رسید تأیید پرداخت واقعی نیست.",width/2,height-35);
-  const link=document.createElement("a");
-  link.download="Atoma_Pay_Receipt.jpg";
-  link.href=canvas.toDataURL("image/jpeg",0.95);
-  link.click();
-}
-
-function changeTheme(){
-  const theme=$("theme").value;
-  document.body.classList.toggle("dark",theme==="dark");
-  if(theme==="auto"){
-    document.body.classList.toggle("dark",
-      window.matchMedia("(prefers-color-scheme: dark)").matches);
-  }
+function applyTranslations(){
+ document.querySelectorAll("[data-i18n]").forEach(el=>{
+  const key=el.dataset.i18n;
+  if(translations[currentLang][key])el.textContent=tr(key);
+ });
+ document.documentElement.lang=currentLang;
+ document.documentElement.dir=
+  ["fa","ar"].includes(currentLang)?"rtl":"ltr";
+ $("receiptSuccess").textContent=tr("success");
+ $("receiptStatus").textContent=tr("sample");
+ updatePackageOptions();
+ renderHistory();
 }
 
 function changeLanguage(){
-  const lang=$("language").value;
-  document.documentElement.lang=lang;
-  document.documentElement.dir=(lang==="en"||lang==="tr")?"ltr":"rtl";
-  alert("زبان انتخاب شد. ترجمه کامل تمام بخش‌ها در نسخه بعدی اضافه می‌شود.");
+ currentLang=$("language").value;
+ localStorage.setItem("atomaLanguage",currentLang);
+ applyTranslations();
 }
 
-updatePackageOptions();
-updateForm();
-setCurrentTime();
-updateSummary();
+function changeTheme(){
+ const theme=$("theme").value;
+ localStorage.setItem("atomaTheme",theme);
+ if(theme==="auto"){
+  document.body.classList.toggle("dark",
+   window.matchMedia("(prefers-color-scheme: dark)").matches);
+ }else{
+  document.body.classList.toggle("dark",theme==="dark");
+ }
+}
+
+function loadSettings(){
+ const lang=localStorage.getItem("atomaLanguage")||"fa";
+ const theme=localStorage.getItem("atomaTheme")||"auto";
+ $("language").value=lang;
+ $("theme").value=theme;
+ currentLang=lang;
+ applyTranslations();
+ changeTheme();
+}
+
+function toggleMenu(){
+ $("menu").classList.toggle("open");
+}
+
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+ $(id).classList.remove("hidden");
+ $("menu").classList.remove("open");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+ const pages=["home","form","history","settings"];
+ const index=pages.indexOf(id);
+ if(index>=0)document.querySelectorAll(".nav button")[index].classList.add("active");
+ updateSummary();
+ if(id==="history")renderHistory();
+}
+
+function updateSummary(){
+ $("totalCount").textContent=receipts.length;
+}
+</script>
+
+<script>
+const packageOptions={
+ internet:[
+  "100 MB","500 MB","1 GB","2 GB","3 GB","5 GB","10 GB",
+  "انترنت نامحدود","دستی"
+ ],
+ minutes:[
+  "10 دقیقه","50 دقیقه","100 دقیقه","500 دقیقه",
+  "1100 دقیقه","2000 دقیقه","5000 دقیقه",
+  "دقایق نامحدود","پیام نامحدود",
+  "دقایق و پیام نامحدود","دستی"
+ ],
+ combined:[
+  "دقایق و پیام نامحدود",
+  "100 MB + 100 دقیقه",
+  "500 MB + 500 دقیقه",
+  "1 GB + 1100 دقیقه",
+  "2 GB + 2000 دقیقه",
+  "3 GB + 3000 دقیقه",
+  "5 GB + 5000 دقیقه",
+  "دستی"
+ ]
+};
+
+function updateForm(){
+ const credit=$("transactionType").value==="credit";
+ $("packageFields").classList.toggle("hidden",credit);
+ $("creditFields").classList.toggle("hidden",!credit);
+ toggleCost();
+}
+
+function updatePackageOptions(){
+ const type=$("packageType").value;
+ $("packageAmount").innerHTML="";
+ packageOptions[type].forEach(item=>{
+  const op=document.createElement("option");
+  op.value=item;
+  op.textContent=item;
+  $("packageAmount").appendChild(op);
+ });
+ checkCustomAmount();
+}
+
+function checkCustomAmount(){
+ $("customAmount").classList.toggle("hidden",
+  $("packageAmount").value!=="دستی");
+}
+
+function checkCustomDuration(){
+ $("customDuration").classList.toggle("hidden",
+  $("duration").value!=="manual");
+}
+
+function toggleSender(){
+ const manual=$("senderMode").value==="manual";
+ $("sender").readOnly=!manual;
+ if(!manual)$("sender").value="93774799365";
+ else $("sender").value="";
+}
+
+function detectNetwork(){
+ if($("networkMode").value==="manual")return;
+ const number=$("receiver").value;
+ const prefix=number.substring(0,2);
+ const map={
+  "70":"AWCC","71":"AWCC",
+  "72":"Roshan","79":"Roshan",
+  "73":"Etisalat","78":"Etisalat",
+  "74":"Salaam","75":"Salaam",
+  "76":"Atoma","77":"Atoma"
+ };
+ const network=map[prefix];
+ if(network){
+  $("network").value=network;
+  $("networkMessage").textContent="شبکه بر اساس پیش‌شماره تشخیص شد؛ لطفاً آن را بررسی کنید.";
+ }else{
+  $("networkMessage").textContent="شبکه تشخیص نشد؛ لطفاً دستی انتخاب کنید.";
+ }
+}
+
+function toggleNetwork(){
+ const manual=$("networkMode").value==="manual";
+ $("network").disabled=!manual;
+ if(!manual)detectNetwork();
+}
+
+function setCurrentTime(){
+ const d=new Date();
+ const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);
+ $("transactionTime").value=local.toISOString().slice(0,19);
+}
+
+function toggleTime(){
+ const manual=$("timeMode").value==="manual";
+ $("transactionTime").readOnly=!manual;
+ if(!manual)setCurrentTime();
+ updateCalendarPreview();
+}
+
+function toggleCost(){
+ const manual=$("costMode").value==="manual";
+ $("cost").readOnly=!manual;
+ if(!manual){
+  if($("transactionType").value==="credit"){
+   $("cost").value=$("creditAmount").value;
+  }else{
+   $("cost").value="";
+  }
+ }
+}
+
+function getValue(id){
+ return $(id).value.trim();
+}
+
+/* Convert Gregorian date to Solar Hijri */
+function gregorianToJalali(gy,gm,gd){
+ const gdm=[0,31,59,90,120,151,181,212,243,273,304,334];
+ let gy2=gm>2?gy+1:gy;
+ let days=355666+365*gy+
+  Math.floor((gy2+3)/4)-
+  Math.floor((gy2+99)/100)+
+  Math.floor((gy2+399)/400)+gd+gdm[gm-1];
+ let jy=-1595+33*Math.floor(days/12053);
+ days%=12053;
+ jy+=4*Math.floor(days/1461);
+ days%=1461;
+ if(days>365){
+  jy+=Math.floor((days-1)/365);
+  days=(days-1)%365;
+ }
+ let jm,jd;
+ if(days<186){
+  jm=1+Math.floor(days/31);
+  jd=1+(days%31);
+ }else{
+  jm=7+Math.floor((days-186)/30);
+  jd=1+((days-186)%30);
+ }
+ return jy+"/"+String(jm).padStart(2,"0")+"/"+String(jd).padStart(2,"0");
+}
+
+function formatCalendar(value){
+ if(!value)return "";
+ const date=new Date(value);
+ if(isNaN(date.getTime()))return value;
+ const type=$("calendarType").value;
+ if(type==="gregory"){
+  return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+ }
+ if(type==="persian"){
+  return gregorianToJalali(
+   date.getFullYear(),date.getMonth()+1,date.getDate()
+  );
+ }
+ try{
+  return new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{
+   year:"numeric",month:"2-digit",day:"2-digit"
+  }).format(date);
+ }catch(e){
+  return new Intl.DateTimeFormat("en-u-ca-islamic",{
+   year:"numeric",month:"2-digit",day:"2-digit"
+  }).format(date);
+ }
+}
+
+function updateCalendarPreview(){
+ const value=$("transactionTime").value;
+ if(!value){
+  $("calendarPreview").textContent="";
+  return;
+ }
+ const datePart=formatCalendar(value);
+ const timePart=value.includes("T")?value.split("T")[1]:"";
+ $("calendarPreview").textContent=datePart+" "+timePart;
+}
+
+$("transactionTime").addEventListener("input",updateCalendarPreview);
+$("calendarType").addEventListener("change",updateCalendarPreview);
+</script>
+
+<script>
+const packageOptions={
+ internet:[
+  "100 MB","500 MB","1 GB","2 GB","3 GB","5 GB","10 GB",
+  "انترنت نامحدود","دستی"
+ ],
+ minutes:[
+  "10 دقیقه","50 دقیقه","100 دقیقه","500 دقیقه",
+  "1100 دقیقه","2000 دقیقه","5000 دقیقه",
+  "دقایق نامحدود","پیام نامحدود",
+  "دقایق و پیام نامحدود","دستی"
+ ],
+ combined:[
+  "دقایق و پیام نامحدود",
+  "100 MB + 100 دقیقه",
+  "500 MB + 500 دقیقه",
+  "1 GB + 1100 دقیقه",
+  "2 GB + 2000 دقیقه",
+  "3 GB + 3000 دقیقه",
+  "5 GB + 5000 دقیقه",
+  "دستی"
+ ]
+};
+
+function updateForm(){
+ const credit=$("transactionType").value==="credit";
+ $("packageFields").classList.toggle("hidden",credit);
+ $("creditFields").classList.toggle("hidden",!credit);
+ toggleCost();
+}
+
+function updatePackageOptions(){
+ const type=$("packageType").value;
+ $("packageAmount").innerHTML="";
+ packageOptions[type].forEach(item=>{
+  const op=document.createElement("option");
+  op.value=item;
+  op.textContent=item;
+  $("packageAmount").appendChild(op);
+ });
+ checkCustomAmount();
+}
+
+function checkCustomAmount(){
+ $("customAmount").classList.toggle("hidden",
+  $("packageAmount").value!=="دستی");
+}
+
+function checkCustomDuration(){
+ $("customDuration").classList.toggle("hidden",
+  $("duration").value!=="manual");
+}
+
+function toggleSender(){
+ const manual=$("senderMode").value==="manual";
+ $("sender").readOnly=!manual;
+ if(!manual)$("sender").value="93774799365";
+ else $("sender").value="";
+}
+
+function detectNetwork(){
+ if($("networkMode").value==="manual")return;
+ const number=$("receiver").value;
+ const prefix=number.substring(0,2);
+ const map={
+  "70":"AWCC","71":"AWCC",
+  "72":"Roshan","79":"Roshan",
+  "73":"Etisalat","78":"Etisalat",
+  "74":"Salaam","75":"Salaam",
+  "76":"Atoma","77":"Atoma"
+ };
+ const network=map[prefix];
+ if(network){
+  $("network").value=network;
+  $("networkMessage").textContent="شبکه بر اساس پیش‌شماره تشخیص شد؛ لطفاً آن را بررسی کنید.";
+ }else{
+  $("networkMessage").textContent="شبکه تشخیص نشد؛ لطفاً دستی انتخاب کنید.";
+ }
+}
+
+function toggleNetwork(){
+ const manual=$("networkMode").value==="manual";
+ $("network").disabled=!manual;
+ if(!manual)detectNetwork();
+}
+
+function setCurrentTime(){
+ const d=new Date();
+ const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);
+ $("transactionTime").value=local.toISOString().slice(0,19);
+}
+
+function toggleTime(){
+ const manual=$("timeMode").value==="manual";
+ $("transactionTime").readOnly=!manual;
+ if(!manual)setCurrentTime();
+ updateCalendarPreview();
+}
+
+function toggleCost(){
+ const manual=$("costMode").value==="manual";
+ $("cost").readOnly=!manual;
+ if(!manual){
+  if($("transactionType").value==="credit"){
+   $("cost").value=$("creditAmount").value;
+  }else{
+   $("cost").value="";
+  }
+ }
+}
+
+function getValue(id){
+ return $(id).value.trim();
+}
+
+/* Convert Gregorian date to Solar Hijri */
+function gregorianToJalali(gy,gm,gd){
+ const gdm=[0,31,59,90,120,151,181,212,243,273,304,334];
+ let gy2=gm>2?gy+1:gy;
+ let days=355666+365*gy+
+  Math.floor((gy2+3)/4)-
+  Math.floor((gy2+99)/100)+
+  Math.floor((gy2+399)/400)+gd+gdm[gm-1];
+ let jy=-1595+33*Math.floor(days/12053);
+ days%=12053;
+ jy+=4*Math.floor(days/1461);
+ days%=1461;
+ if(days>365){
+  jy+=Math.floor((days-1)/365);
+  days=(days-1)%365;
+ }
+ let jm,jd;
+ if(days<186){
+  jm=1+Math.floor(days/31);
+  jd=1+(days%31);
+ }else{
+  jm=7+Math.floor((days-186)/30);
+  jd=1+((days-186)%30);
+ }
+ return jy+"/"+String(jm).padStart(2,"0")+"/"+String(jd).padStart(2,"0");
+}
+
+function formatCalendar(value){
+ if(!value)return "";
+ const date=new Date(value);
+ if(isNaN(date.getTime()))return value;
+ const type=$("calendarType").value;
+ if(type==="gregory"){
+  return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+ }
+ if(type==="persian"){
+  return gregorianToJalali(
+   date.getFullYear(),date.getMonth()+1,date.getDate()
+  );
+ }
+ try{
+  return new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{
+   year:"numeric",month:"2-digit",day:"2-digit"
+  }).format(date);
+ }catch(e){
+  return new Intl.DateTimeFormat("en-u-ca-islamic",{
+   year:"numeric",month:"2-digit",day:"2-digit"
+  }).format(date);
+ }
+}
+
+function updateCalendarPreview(){
+ const value=$("transactionTime").value;
+ if(!value){
+  $("calendarPreview").textContent="";
+  return;
+ }
+ const datePart=formatCalendar(value);
+ const timePart=value.includes("T")?value.split("T")[1]:"";
+ $("calendarPreview").textContent=datePart+" "+timePart;
+}
+
+$("transactionTime").addEventListener("input",updateCalendarPreview);
+$("calendarType").addEventListener("change",updateCalendarPreview);
+</script>
+
+<script>
+function createReceipt(){
+ const credit=$("transactionType").value==="credit";
+ const receiver=getValue("receiver");
+ const sender=getValue("sender");
+
+ if(!/^7\d{8}$/.test(receiver)){
+  alert(tr("invalidReceiver"));
+  return;
+ }
+ if(!sender){
+  alert(tr("invalidSender"));
+  return;
+ }
+ if(credit && Number(getValue("creditAmount"))<=0){
+  alert(tr("invalidCredit"));
+  return;
+ }
+
+ let amount="";
+ let duration="—";
+
+ if(!credit){
+  amount=$("packageAmount").value==="دستی"
+   ?getValue("customAmount"):getValue("packageAmount");
+
+  duration=$("duration").value==="manual"
+   ?getValue("customDuration"):getValue("duration");
+
+  if(!amount||!duration){
+   alert(tr("invalidPackage"));
+   return;
+  }
+ }
+
+ const timeValue=getValue("transactionTime");
+ if(!timeValue){
+  alert("زمان معامله را وارد کنید.");
+  return;
+ }
+
+ const dateDisplay=formatCalendar(timeValue);
+ const timeDisplay=timeValue.split("T")[1]||"";
+ const transactionTime=dateDisplay+" "+timeDisplay;
+
+ const data={
+  id:Date.now(),
+  type:credit?tr("creditIncrease"):tr("packagePurchase"),
+  packageType:credit?"—":getValue("packageType"),
+  amount:credit?getValue("creditAmount"):amount,
+  duration:duration,
+  sender:sender,
+  receiver:"93"+receiver,
+  network:getValue("network"),
+  time:transactionTime,
+  cost:getValue("cost"),
+  note:getValue("note"),
+  calendar:$("calendarType").value
+ };
+
+ currentReceipt=data;
+ renderReceipt(data);
+
+ receipts.unshift(data);
+ localStorage.setItem("atomaReceipts",JSON.stringify(receipts));
+
+ $("receiptArea").classList.remove("hidden");
+ updateSummary();
+ $("receiptArea").scrollIntoView({behavior:"smooth"});
+}
+
+function addRow(label,value){
+ const row=document.createElement("div");
+ row.className="receipt-row";
+
+ const a=document.createElement("span");
+ const b=document.createElement("span");
+
+ a.textContent=label;
+ b.textContent=value||"—";
+
+ if(label===tr("time")){
+  b.style.direction="ltr";
+  b.style.textAlign="left";
+ }
+
+ row.append(a,b);
+ $("receiptRows").appendChild(row);
+}
+
+function renderReceipt(d){
+ $("receiptRows").innerHTML="";
+
+ addRow(tr("transaction"),d.type);
+ addRow(tr("packageType"),d.packageType);
+ addRow(tr("amount"),d.amount);
+ addRow(tr("duration"),d.duration);
+ addRow(tr("sender"),d.sender);
+ addRow(tr("network"),d.network);
+ addRow(tr("receiver"),d.receiver);
+ addRow(tr("time"),d.time);
+ addRow(tr("cost"),d.cost?d.cost+" AFN":"—");
+ addRow(tr("note"),d.note);
+ addRow(tr("number"),String(d.id));
+}
+
+function newForm(){
+ $("receiptArea").classList.add("hidden");
+ $("receiver").value="";
+ $("note").value="";
+ $("cost").value="";
+ $("creditAmount").value="";
+ $("customAmount").value="";
+ $("customDuration").value="";
+ $("senderMode").value="auto";
+ toggleSender();
+
+ $("transactionType").value="package";
+ $("packageType").value="internet";
+ $("duration").value="1 روز";
+ $("timeMode").value="auto";
+ $("costMode").value="auto";
+ $("networkMode").value="auto";
+
+ updateForm();
+ updatePackageOptions();
+ toggleNetwork();
+ toggleTime();
+ toggleCost();
+
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderHistory(){
+ $("historyList").innerHTML="";
+
+ if(!receipts.length){
+  $("historyList").textContent=tr("noHistory");
+  return;
+ }
+
+ receipts.forEach(r=>{
+  const box=document.createElement("div");
+  box.className="history-item";
+
+  const title=document.createElement("strong");
+  title.textContent=r.type+" - "+r.receiver;
+
+  const p=document.createElement("p");
+  p.textContent=tr("amount")+": "+r.amount+
+   " | "+tr("cost")+": "+(r.cost||"—");
+
+  const t=document.createElement("p");
+  t.textContent=tr("time")+": "+r.time;
+
+  const btn=document.createElement("button");
+  btn.className="secondary";
+  btn.textContent="نمایش رسید";
+
+  btn.onclick=()=>{
+   currentReceipt=r;
+   renderReceipt(r);
+   $("receiptArea").classList.remove("hidden");
+   showPage("form");
+   $("receiptArea").scrollIntoView({behavior:"smooth"});
+  };
+
+  box.append(title,p,t,btn);
+  $("historyList").appendChild(box);
+ });
+}
+
+function clearHistory(){
+ if(confirm(tr("confirmClear"))){
+  receipts=[];
+  localStorage.removeItem("atomaReceipts");
+  renderHistory();
+  updateSummary();
+ }
+}
+
+function downloadJPG(){
+ if(!currentReceipt)return;
+
+ const d=currentReceipt;
+ const lines=[
+  [tr("transaction"),d.type],
+  [tr("packageType"),d.packageType],
+  [tr("amount"),d.amount],
+  [tr("duration"),d.duration],
+  [tr("sender"),d.sender],
+  [tr("network"),d.network],
+  [tr("receiver"),d.receiver],
+  [tr("time"),d.time],
+  [tr("cost"),d.cost?d.cost+" AFN":"—"],
+  [tr("note"),d.note||"—"],
+  [tr("number"),String(d.id)]
+ ];
+
+ const canvas=document.createElement("canvas");
+ const width=900;
+ const height=330+lines.length*68;
+ canvas.width=width;
+ canvas.height=height;
+
+ const ctx=canvas.getContext("2d");
+ ctx.fillStyle="#ffffff";
+ ctx.fillRect(0,0,width,height);
+
+ ctx.textAlign="center";
+ ctx.direction="ltr";
+ ctx.fillStyle="#079447";
+ ctx.font="bold 34px Arial";
+ ctx.fillText("Atoma Pay Receipt Maker",width/2,55);
+
+ ctx.fillStyle="#079447";
+ ctx.font="bold 28px Arial";
+ ctx.fillText(tr("success"),width/2,110);
+
+ ctx.fillStyle="#a33";
+ ctx.font="bold 22px Arial";
+ ctx.fillText(tr("sample"),width/2,155);
+
+ let y=220;
+
+ lines.forEach(([label,value])=>{
+  ctx.strokeStyle="#dddddd";
+  ctx.beginPath();
+  ctx.moveTo(35,y+22);
+  ctx.lineTo(width-35,y+22);
+  ctx.stroke();
+
+  ctx.direction="rtl";
+  ctx.textAlign="right";
+  ctx.fillStyle="#666";
+  ctx.font="22px Arial";
+  ctx.fillText(label,width-45,y);
+
+  ctx.direction="ltr";
+  ctx.textAlign="left";
+  ctx.fillStyle="#17251d";
+  ctx.font="bold 22px Arial";
+  ctx.fillText(String(value||"—"),45,y);
+
+  y+=68;
+ });
+
+ ctx.textAlign="center";
+ ctx.fillStyle="#a33";
+ ctx.font="bold 20px Arial";
+ ctx.fillText(tr("sample"),width/2,height-55);
+
+ ctx.fillStyle="#777";
+ ctx.font="17px Arial";
+ ctx.fillText("This is not proof of a real payment.",width/2,height-25);
+
+ const link=document.createElement("a");
+ link.download="Atoma_Pay_Receipt.jpg";
+ link.href=canvas.toDataURL("image/jpeg",0.95);
+ link.click();
+}
+
+/* Start application */
+function startApp(){
+ updatePackageOptions();
+ updateForm();
+ setCurrentTime();
+ loadSettings();
+ toggleNetwork();
+ toggleCost();
+ updateSummary();
+ updateCalendarPreview();
+}
+
+startApp();
 </script>
 </body>
 </html>
