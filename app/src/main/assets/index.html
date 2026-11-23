@@ -1101,12 +1101,23 @@ function clearHistory(){
 }
 
 function downloadJPG(){
- if(!currentReceipt)return;
- const canvas=buildReceiptCanvas(currentReceipt);
- const link=document.createElement("a");
- link.download="ABK_Credit_Package_Receipt.jpg";
- link.href=canvas.toDataURL("image/jpeg",0.96);
- link.click();
+    if(!currentReceipt)return;
+    const canvas=buildReceiptCanvas(currentReceipt);
+    const imageData=canvas.toDataURL("image/jpeg",0.96);
+    const base64=imageData.split(",")[1];
+    if(window.Android && typeof Android.saveImage === "function"){
+        const result=Android.saveImage(base64);
+        if(result==="SUCCESS"){
+            alert("تصویر رسید با موفقیت در گالری ذخیره شد.");
+        }else{
+            alert("ذخیره تصویر ناموفق بود. دوباره تلاش کنید.");
+        }
+    }else{
+        const link=document.createElement("a");
+        link.download="ABK_Credit_Package_Receipt.jpg";
+        link.href=imageData;
+        link.click();
+    }
 }
 
 /* Start application */
