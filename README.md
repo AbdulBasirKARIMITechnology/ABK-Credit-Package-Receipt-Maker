@@ -1,2 +1,2 @@
-# Atoma-Receipt-Maker
-Atoma Receipt Maker Android App
+# Credit & Package Receipt Maker
+Credit & Package Receipt Maker Android App
